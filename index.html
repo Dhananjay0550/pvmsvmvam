@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PVM SVM VAM — College + Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   WEBSITE STYLES
+============================================================ */
+:root {
+  --navy:#0f2044;--navy-mid:#1a3461;--saffron:#e87020;--saffron-light:#f59340;
+  --gold:#c9a84c;--cream:#fdf8ef;--cream-dark:#f5eed8;--white:#ffffff;
+  --text-dark:#1a1a2e;--text-mid:#3d4a6b;--text-light:#6b7a99;
+  --border:rgba(200,168,76,.25);--shadow:0 8px 40px rgba(15,32,68,.12);
+  --shadow-lg:0 20px 80px rgba(15,32,68,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--cream-dark)}::-webkit-scrollbar-thumb{background:var(--saffron);border-radius:3px}
+
+.topbar{background:var(--navy);padding:8px 40px;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:rgba(255,255,255,.75);gap:16px;flex-wrap:wrap}
+.topbar a{color:var(--saffron-light);text-decoration:none;transition:color .2s}.topbar a:hover{color:var(--white)}
+.topbar-left,.topbar-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.topbar-item{display:flex;align-items:center;gap:6px}
+
+header{background:var(--white);padding:18px 40px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:90;box-shadow:0 2px 20px rgba(15,32,68,.08);border-bottom:3px solid var(--saffron)}
+.logo-area{display:flex;align-items:center;gap:16px;text-decoration:none;flex-shrink:0}
+.logo-emblem{width:62px;height:62px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2.5px solid var(--gold)}
+.logo-emblem svg{width:38px;height:38px}
+.logo-text h1{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--navy);line-height:1.25;letter-spacing:.01em}
+.logo-text p{font-size:11.5px;color:var(--saffron);font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+nav{margin-left:auto;display:flex;align-items:center;gap:4px}
+nav a{font-size:13.5px;font-weight:500;color:var(--text-mid);text-decoration:none;padding:8px 14px;border-radius:6px;transition:all .2s;white-space:nowrap}
+nav a:hover{color:var(--navy);background:var(--cream)}nav a.active{color:var(--saffron);background:rgba(232,112,32,.08)}
+.nav-dropdown{position:relative}.nav-dropdown>a::after{content:' ▾';font-size:10px;opacity:.6}
+.dropdown-menu{position:absolute;top:calc(100% + 6px);left:0;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:200px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transform:translateY(-8px);transition:all .2s;z-index:200}
+.nav-dropdown:hover .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0)}
+.dropdown-menu a{display:block;padding:8px 12px;font-size:13px;border-radius:6px;color:var(--text-mid)}.dropdown-menu a:hover{background:var(--cream);color:var(--navy)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;border:none;background:none;margin-left:auto}
+.hamburger span{width:24px;height:2px;background:var(--navy);border-radius:2px;display:block}
+
+.hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden;background:var(--navy)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(232,112,32,.18) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 20% 80%,rgba(201,168,76,.12) 0%,transparent 50%),linear-gradient(135deg,#0f2044 0%,#1a3461 50%,#0f2044 100%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px}
+.hero-pattern{position:absolute;right:-60px;top:50%;transform:translateY(-50%);width:500px;height:500px;opacity:.06}
+.hero-content{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:80px 40px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;width:100%}
+.hero-left{animation:fadeUp .8s ease both}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(232,112,32,.15);border:1px solid rgba(232,112,32,.3);color:var(--saffron-light);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;border-radius:100px;margin-bottom:28px}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--saffron-light);border-radius:50%;animation:pulse 2s infinite}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(32px,4.5vw,58px);font-weight:700;color:var(--white);line-height:1.15;margin-bottom:12px}
+.hero-title em{font-style:italic;color:var(--saffron-light)}
+.hero-subtitle{font-family:'Crimson Pro',serif;font-size:20px;color:rgba(255,255,255,.65);margin-bottom:28px;line-height:1.5}
+.hero-desc{font-size:15px;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:36px;max-width:500px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{background:var(--saffron);color:var(--white);padding:14px 28px;border-radius:8px;font-size:14.5px;font-weight:600;text-decoration:none;transition:all .25s;border:2px solid var(--saffron);display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{background:var(--saffron-light);border-color:var(--saffron-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,112,32,.35)}
+.btn-outline{background:transparent;color:var(--white);padding:14px 28px;border-radius:8px;font-size:14.5px;font-weight:500;text-decoration:none;transition:all .25s;border:2px solid rgba(255,255,255,.25);display:inline-flex;align-items:center;gap:8px}
+.btn-outline:hover{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.08);transform:translateY(-2px)}
+.hero-right{animation:fadeUp .8s .2s ease both}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stat-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px 20px;text-align:center;backdrop-filter:blur(10px);transition:all .3s}
+.stat-card:hover{background:rgba(255,255,255,.11);transform:translateY(-4px);border-color:rgba(232,112,32,.3)}
+.stat-card.featured{grid-column:span 2;background:rgba(232,112,32,.12);border-color:rgba(232,112,32,.25)}
+.stat-number{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;color:var(--saffron-light);line-height:1;margin-bottom:6px}
+.stat-label{font-size:13px;color:rgba(255,255,255,.6);font-weight:400}
+
+.marquee-bar{background:var(--saffron);padding:12px 0;overflow:hidden}
+.marquee-inner{display:flex;animation:marquee 28s linear infinite;white-space:nowrap}
+.marquee-inner span{font-size:13px;font-weight:600;color:var(--white);letter-spacing:.05em;padding:0 40px}
+.marquee-inner span::before{content:'◆  ';opacity:.7}
+
+section{padding:80px 40px}
+.container{max-width:1200px;margin:0 auto}
+.section-tag{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--saffron);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-tag::before{content:'';display:block;width:24px;height:2px;background:var(--saffron)}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(28px,3.5vw,42px);font-weight:700;color:var(--navy);line-height:1.2;margin-bottom:16px}
+.section-desc{font-size:16px;color:var(--text-light);line-height:1.8;max-width:600px}
+.section-header{margin-bottom:50px}.section-header.center{text-align:center}
+.section-header.center .section-tag{justify-content:center}.section-header.center .section-tag::before{display:none}
+.section-header.center .section-desc{margin:0 auto}
+
+.about{background:var(--white)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about-visual{position:relative}
+.about-img-main{width:100%;border-radius:20px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);height:400px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.about-img-main svg{width:160px;height:160px;opacity:.15}
+.about-img-main-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:40px}
+.about-img-main-text h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin-bottom:12px;line-height:1.3}
+.about-img-main-text p{font-size:14px;opacity:.7;line-height:1.7}
+.about-badge-float{position:absolute;bottom:-20px;right:-20px;background:var(--saffron);color:white;border-radius:16px;padding:20px 24px;text-align:center;box-shadow:var(--shadow)}
+.about-badge-float strong{display:block;font-size:28px;font-family:'Playfair Display',serif;font-weight:700}
+.about-badge-float span{font-size:12px;opacity:.85}
+.about-list{list-style:none;margin:28px 0}
+.about-list li{padding:10px 0;border-bottom:1px solid var(--cream-dark);display:flex;align-items:flex-start;gap:12px;font-size:15px;color:var(--text-mid);line-height:1.6}
+.about-list li::before{content:'✦';color:var(--saffron);flex-shrink:0;margin-top:2px;font-size:12px}
+
+.courses{background:var(--cream)}
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.course-card{background:var(--white);border-radius:20px;padding:32px 28px;border:1px solid var(--border);transition:all .35s;position:relative;overflow:hidden;cursor:default}
+.course-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);opacity:0;transition:opacity .35s;border-radius:20px}
+.course-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}.course-card:hover::before{opacity:1}
+.course-card *{position:relative;z-index:1;transition:color .35s}
+.course-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--saffron) 0%,var(--saffron-light) 100%);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:22px}
+.course-card:hover .course-icon{background:rgba(255,255,255,.15)}
+.course-card h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--navy);margin-bottom:6px}.course-card:hover h3{color:white}
+.course-short{font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--saffron);text-transform:uppercase;margin-bottom:12px}.course-card:hover .course-short{color:var(--saffron-light)}
+.course-card p{font-size:14px;color:var(--text-light);line-height:1.7}.course-card:hover p{color:rgba(255,255,255,.7)}
+.course-tag{display:inline-block;margin-top:16px;background:var(--cream);color:var(--navy);font-size:12px;font-weight:600;padding:5px 12px;border-radius:100px}
+.course-card:hover .course-tag{background:rgba(255,255,255,.15);color:white}
+
+.facilities{background:var(--white)}
+.facilities-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.facility-card{background:var(--cream);border-radius:16px;padding:28px 24px;display:flex;gap:18px;align-items:flex-start;transition:all .3s;border:1px solid transparent}
+.facility-card:hover{background:var(--white);border-color:var(--border);box-shadow:var(--shadow);transform:translateY(-3px)}
+.facility-icon{font-size:28px;width:52px;height:52px;background:linear-gradient(135deg,rgba(232,112,32,.12),rgba(232,112,32,.05));border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.facility-card h4{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.facility-card p{font-size:13.5px;color:var(--text-light);line-height:1.6}
+
+.vision-mission{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);position:relative;overflow:hidden}
+.vision-mission::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 80% 30%,rgba(232,112,32,.15),transparent)}
+.vm-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;position:relative}
+.vm-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:40px 36px;backdrop-filter:blur(10px)}
+.vm-card h3{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--white);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.vm-card h3 span{color:var(--saffron-light)}.vm-icon{font-size:32px}
+.vm-card p{font-size:15px;color:rgba(255,255,255,.7);line-height:1.85}
+.vm-card ul{list-style:none;margin-top:16px}
+.vm-card ul li{padding:8px 0;font-size:14.5px;color:rgba(255,255,255,.65);display:flex;gap:10px;border-bottom:1px solid rgba(255,255,255,.07)}
+.vm-card ul li::before{content:'→';color:var(--saffron-light);flex-shrink:0}
+
+.links-section{background:var(--cream)}
+.links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.link-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px;text-decoration:none;display:flex;align-items:center;gap:12px;transition:all .25s;color:var(--text-mid);font-size:14px;font-weight:500}
+.link-card:hover{border-color:var(--saffron);color:var(--saffron);transform:translateY(-2px);box-shadow:var(--shadow)}
+.link-card::before{content:'🔗';font-size:16px;flex-shrink:0}
+
+.news{background:var(--white)}
+.news-grid{display:grid;grid-template-columns:2fr 1fr;gap:40px}
+.news-card{background:var(--cream);border-radius:16px;padding:28px;border-left:4px solid var(--saffron);margin-bottom:18px;transition:all .25s}
+.news-card:hover{background:var(--white);box-shadow:var(--shadow);transform:translateX(4px)}
+.news-date{font-size:12px;color:var(--saffron);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.news-card h4{font-size:16px;font-weight:600;color:var(--navy);line-height:1.5;margin-bottom:8px}
+.news-card p{font-size:13.5px;color:var(--text-light);line-height:1.7}
+.sidebar-widget{background:var(--cream);border-radius:16px;padding:28px 24px;border:1px solid var(--border)}
+.sidebar-widget h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--navy);margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--saffron)}
+.quick-link{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.06);text-decoration:none;color:var(--text-mid);font-size:14px;font-weight:500;transition:all .2s}
+.quick-link:hover{color:var(--saffron);padding-left:6px}.quick-link::before{content:'›';font-size:18px;color:var(--saffron);font-weight:700}
+
+.contact{background:var(--navy)}
+.contact .section-title{color:var(--white)}.contact .section-tag{color:var(--saffron-light)}
+.contact .section-tag::before{background:var(--saffron-light)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px}
+.contact-info-list{list-style:none;margin-top:20px}
+.contact-info-item{display:flex;align-items:flex-start;gap:16px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.contact-icon{width:42px;height:42px;background:rgba(232,112,32,.18);border:1px solid rgba(232,112,32,.3);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.contact-info-item h5{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--saffron-light);margin-bottom:4px}
+.contact-info-item p{font-size:15px;color:rgba(255,255,255,.75);line-height:1.6}
+.contact-form{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px 32px}
+.contact-form h3{font-family:'Playfair Display',serif;font-size:22px;color:white;margin-bottom:24px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.form-group label{font-size:13px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:.04em}
+.form-group input,.form-group textarea,.form-group select{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 16px;color:white;font-size:14px;font-family:'DM Sans',sans-serif;transition:border-color .2s;outline:none;width:100%}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--saffron)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,.3)}
+.form-group select option{background:var(--navy)}.form-group textarea{resize:vertical;min-height:100px}
+.btn-submit{width:100%;background:var(--saffron);color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s;font-family:'DM Sans',sans-serif}
+.btn-submit:hover{background:var(--saffron-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,112,32,.35)}
+
+footer{background:#080f1f;padding:60px 40px 30px;color:rgba(255,255,255,.6)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:50px;margin-bottom:50px}
+.footer-brand p{font-size:14px;line-height:1.8;margin:16px 0 20px;max-width:280px}
+.footer-col h4{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--saffron-light);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.footer-col ul{list-style:none}.footer-col ul li{margin-bottom:10px}
+.footer-col ul li a{font-size:13.5px;color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s}.footer-col ul li a:hover{color:var(--saffron-light)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:13px}
+.footer-bottom a{color:var(--saffron-light);text-decoration:none}
+.footer-logo{display:flex;align-items:center;gap:10px}
+.footer-logo-circle{width:40px;height:40px;background:var(--navy);border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
+.footer-brand-text{font-family:'Playfair Display',serif;font-size:15px;color:var(--white);font-weight:600}
+.mobile-nav{display:none;position:fixed;inset:0;background:var(--white);z-index:999;padding:80px 30px 40px;flex-direction:column;gap:4px;overflow-y:auto}
+.mobile-nav.open{display:flex}
+.mobile-nav a{display:block;padding:14px 16px;font-size:16px;font-weight:500;color:var(--text-dark);text-decoration:none;border-radius:10px;border-bottom:1px solid var(--cream-dark)}
+.mobile-nav a:hover{background:var(--cream);color:var(--saffron)}
+.mobile-nav .close-btn{position:absolute;top:20px;right:20px;background:var(--cream);border:none;width:40px;height:40px;border-radius:10px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mobile-nav h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--navy);margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--saffron)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+@media(max-width:1024px){.facilities-grid{grid-template-columns:1fr 1fr}.footer-grid{grid-template-columns:1fr 1fr}.news-grid{grid-template-columns:1fr}header{padding:14px 24px}nav{display:none}.hamburger{display:flex}}
+@media(max-width:768px){section{padding:60px 20px}.topbar{padding:8px 20px;font-size:11px}.topbar-right{display:none}.hero-content{grid-template-columns:1fr;gap:40px}.hero-right{display:none}.about-grid{grid-template-columns:1fr;gap:40px}.vm-grid{grid-template-columns:1fr}.contact-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr;gap:30px}.courses-grid{grid-template-columns:1fr}.facilities-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.footer-bottom{flex-direction:column;text-align:center}.about-badge-float{right:0;bottom:-10px}}
+
+/* ============================================================
+   ADMIN PANEL STYLES
+============================================================ */
+:root {
+  --adm-bg: #0d1117;
+  --adm-surface: #161b22;
+  --adm-border: #30363d;
+  --adm-primary: #58a6ff;
+  --adm-success: #3fb950;
+  --adm-danger: #f85149;
+  --adm-warning: #d29922;
+  --adm-text: #e6edf3;
+  --adm-muted: #8b949e;
+  --adm-hover: rgba(88,166,255,.1);
+}
+
+/* Gear button - always visible, bottom right */
+#admin-gear-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 52px;
+  height: 52px;
+  background: var(--navy);
+  color: var(--gold);
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 8888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,.4);
+  transition: all .3s;
+}
+#admin-gear-btn:hover { transform: rotate(90deg) scale(1.1); box-shadow: 0 6px 28px rgba(232,112,32,.5); background: var(--saffron); color: white; border-color: var(--saffron); }
+
+/* LOGIN MODAL */
+#admin-login-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+#admin-login-modal.show { display: flex; }
+.admin-login-box {
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.6);
+  animation: adminSlideUp .3s ease;
+}
+@keyframes adminSlideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.admin-login-logo {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.admin-login-logo .shield { font-size: 48px; }
+.admin-login-logo h2 { font-family: 'DM Sans', sans-serif; color: var(--adm-text); font-size: 22px; font-weight: 600; margin-top: 12px; }
+.admin-login-logo p { color: var(--adm-muted); font-size: 13px; margin-top: 4px; }
+.admin-input-group { margin-bottom: 16px; }
+.admin-input-group label { display: block; font-size: 13px; font-weight: 600; color: var(--adm-muted); margin-bottom: 8px; letter-spacing: .04em; }
+.admin-input-group input {
+  width: 100%;
+  background: var(--adm-bg);
+  border: 1px solid var(--adm-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--adm-text);
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: border-color .2s;
+}
+.admin-input-group input:focus { border-color: var(--adm-primary); }
+.admin-login-btn {
+  width: 100%;
+  background: var(--adm-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 13px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .2s;
+  margin-top: 8px;
+}
+.admin-login-btn:hover { filter: brightness(1.15); }
+.admin-login-error { color: var(--adm-danger); font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+.admin-login-hint { color: var(--adm-muted); font-size: 12px; text-align: center; margin-top: 14px; }
+.admin-login-hint code { background: var(--adm-bg); padding: 2px 8px; border-radius: 4px; color: var(--adm-warning); font-family: 'JetBrains Mono', monospace; }
+
+/* TOOLBAR */
+#admin-toolbar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: var(--adm-bg);
+  border-bottom: 1px solid var(--adm-border);
+  z-index: 8800;
+  align-items: center;
+  padding: 0 20px;
+  gap: 8px;
+  box-shadow: 0 2px 16px rgba(0,0,0,.5);
+}
+#admin-toolbar.show { display: flex; }
+body.admin-active { padding-top: 52px; }
+.toolbar-logo {
+  display: flex; align-items: center; gap: 8px;
+  margin-right: 16px;
+  font-size: 13px; font-weight: 700; color: var(--adm-primary);
+  letter-spacing: .05em;
+}
+.toolbar-logo span { font-size: 18px; }
+.toolbar-divider { width: 1px; height: 24px; background: var(--adm-border); margin: 0 8px; }
+.tb-btn {
+  display: flex; align-items: center; gap: 7px;
+  background: transparent;
+  border: 1px solid var(--adm-border);
+  border-radius: 7px;
+  padding: 7px 14px;
+  color: var(--adm-text);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.tb-btn:hover { background: var(--adm-hover); border-color: var(--adm-primary); color: var(--adm-primary); }
+.tb-btn.active { background: rgba(88,166,255,.15); border-color: var(--adm-primary); color: var(--adm-primary); }
+.tb-btn.success { border-color: var(--adm-success); color: var(--adm-success); }
+.tb-btn.success:hover { background: rgba(63,185,80,.1); }
+.tb-btn.danger { border-color: var(--adm-danger); color: var(--adm-danger); }
+.tb-btn.danger:hover { background: rgba(248,81,73,.1); }
+.tb-btn.warning { border-color: var(--adm-warning); color: var(--adm-warning); }
+.tb-btn.warning:hover { background: rgba(210,153,34,.1); }
+.toolbar-status {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--adm-muted);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--adm-muted); flex-shrink: 0; }
+.status-dot.active { background: var(--adm-success); box-shadow: 0 0 6px var(--adm-success); animation: blinkDot 1.5s infinite; }
+@keyframes blinkDot{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ELEMENT HOVER in edit mode */
+body.admin-edit-mode * { cursor: crosshair !important; }
+body.admin-edit-mode .admin-hl {
+  outline: 2px dashed #58a6ff !important;
+  outline-offset: 2px !important;
+  position: relative;
+}
+.admin-el-tooltip {
+  position: fixed;
+  background: var(--adm-bg);
+  border: 1px solid var(--adm-primary);
+  color: var(--adm-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 9000;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,.5);
+  display: none;
+}
+
+/* EDITOR PANEL (slides from right) */
+#admin-editor-panel {
+  position: fixed;
+  top: 52px;
+  right: -680px;
+  width: 660px;
+  bottom: 0;
+  background: var(--adm-bg);
+  border-left: 1px solid var(--adm-border);
+  z-index: 8700;
+  display: flex;
+  flex-direction: column;
+  transition: right .35s cubic-bezier(.4,0,.2,1);
+  box-shadow: -8px 0 40px rgba(0,0,0,.5);
+}
+#admin-editor-panel.open { right: 0; }
+
+.panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--adm-border);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-shrink: 0;
+  background: var(--adm-surface);
+}
+.panel-header-info { flex: 1; min-width: 0; }
+.panel-header-title { font-size: 14px; font-weight: 600; color: var(--adm-text); margin-bottom: 4px; }
+.panel-breadcrumb {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--adm-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.panel-close-btn {
+  background: transparent;
+  border: 1px solid var(--adm-border);
+  border-radius: 7px;
+  width: 34px; height: 34px;
+  color: var(--adm-muted);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.panel-close-btn:hover { background: rgba(248,81,73,.1); border-color: var(--adm-danger); color: var(--adm-danger); }
+
+.panel-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--adm-border);
+  flex-shrink: 0;
+  background: var(--adm-surface);
+}
+.panel-tab {
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--adm-muted);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .2s;
+}
+.panel-tab:hover { color: var(--adm-text); }
+.panel-tab.active { color: var(--adm-primary); border-bottom-color: var(--adm-primary); }
+
+.panel-toolbar {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--adm-border);
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  background: var(--adm-surface);
+  flex-wrap: wrap;
+}
+.ptb-btn {
+  background: transparent;
+  border: 1px solid var(--adm-border);
+  border-radius: 5px;
+  padding: 5px 12px;
+  color: var(--adm-muted);
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all .2s;
+}
+.ptb-btn:hover { color: var(--adm-text); border-color: var(--adm-text); }
+
+.editor-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.editor-wrap textarea {
+  width: 100%;
+  height: 100%;
+  background: var(--adm-bg);
+  border: none;
+  outline: none;
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--adm-text);
+  resize: none;
+  tab-size: 2;
+  -moz-tab-size: 2;
+}
+.tab-content { display: none; height: 100%; }
+.tab-content.active { display: block; height: 100%; }
+
+.panel-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--adm-border);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+  background: var(--adm-surface);
+}
+.pf-btn {
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border: none;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.pf-btn.apply { background: var(--adm-primary); color: white; }
+.pf-btn.apply:hover { filter: brightness(1.15); }
+.pf-btn.apply-css { background: var(--adm-success); color: white; }
+.pf-btn.apply-css:hover { filter: brightness(1.1); }
+.pf-btn.delete { background: transparent; border: 1px solid var(--adm-danger); color: var(--adm-danger); }
+.pf-btn.delete:hover { background: rgba(248,81,73,.12); }
+.pf-btn.cancel { background: transparent; border: 1px solid var(--adm-border); color: var(--adm-muted); }
+.pf-btn.cancel:hover { border-color: var(--adm-text); color: var(--adm-text); }
+.pf-btn.html-only { display: flex; }
+.pf-btn.css-only { display: none; }
+
+.save-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--adm-success);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  z-index: 10000;
+  opacity: 0;
+  transition: all .3s;
+  box-shadow: 0 4px 20px rgba(63,185,80,.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.save-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Dim rest of page when panel open */
+#admin-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.2);
+  z-index: 8600;
+  display: none;
+  pointer-events: none;
+}
+#admin-overlay.show { display: block; }
+
+/* Edit mode badge */
+.edit-mode-badge {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--adm-primary);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  z-index: 8500;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(88,166,255,.4);
+  pointer-events: none;
+}
+.edit-mode-badge.show { display: flex; }
+
+/* Saved changes indicator in header */
+.unsaved-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--adm-warning);
+  border-radius: 50%;
+  margin-left: 6px;
+  display: none;
+}
+.unsaved-dot.show { display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- ============ ADMIN UI ============ -->
+
+<!-- GEAR BUTTON -->
+<button id="admin-gear-btn" title="Admin Panel (Ctrl+Shift+A)" onclick="Admin.showLogin()">⚙</button>
+
+<!-- ELEMENT TOOLTIP -->
+<div class="admin-el-tooltip" id="admin-tooltip"></div>
+
+<!-- SAVE TOAST -->
+<div class="save-toast" id="save-toast">✓ Changes saved to localStorage</div>
+
+<!-- EDIT MODE BADGE -->
+<div class="edit-mode-badge" id="edit-badge">✏️ Edit Mode Active — Click any element to edit</div>
+
+<!-- PAGE DIM OVERLAY -->
+<div id="admin-overlay"></div>
+
+<!-- LOGIN MODAL -->
+<div id="admin-login-modal">
+  <div class="admin-login-box">
+    <div class="admin-login-logo">
+      <div class="shield">🔐</div>
+      <h2>Admin Panel</h2>
+      <p>PVM SVM VAM — Website Editor</p>
+    </div>
+    <div class="admin-input-group">
+      <label>USERNAME</label>
+      <input type="text" id="admin-username" placeholder="admin" value="admin">
+    </div>
+    <div class="admin-input-group">
+      <label>PASSWORD</label>
+      <input type="password" id="admin-password" placeholder="Enter password" onkeydown="if(event.key==='Enter')Admin.login()">
+    </div>
+    <button class="admin-login-btn" onclick="Admin.login()">Sign In →</button>
+    <div class="admin-login-error" id="login-error">❌ Incorrect password. Try again.</div>
+    <div class="admin-login-hint">Default password: <code>admin123</code></div>
+    <div style="text-align:center;margin-top:16px">
+      <button onclick="Admin.hideLogin()" style="background:none;border:none;color:var(--adm-muted);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div id="admin-toolbar">
+  <div class="toolbar-logo"><span>⚙</span> ADMIN PANEL</div>
+  <div class="toolbar-divider"></div>
+  <button class="tb-btn" id="tb-edit-btn" onclick="Admin.toggleEditMode()">✏️ Edit Mode: <strong id="edit-mode-label">OFF</strong></button>
+  <div class="toolbar-divider"></div>
+  <button class="tb-btn success" onclick="Admin.saveAll()">💾 Save All</button>
+  <button class="tb-btn warning" onclick="Admin.resetAll()">🔄 Reset to Default</button>
+  <div class="toolbar-divider"></div>
+  <button class="tb-btn" onclick="Admin.openCSSEditor()">🎨 Edit Global CSS</button>
+  <div class="toolbar-divider"></div>
+  <button class="tb-btn danger" onclick="Admin.logout()">🚪 Logout</button>
+  <div class="toolbar-status">
+    <div class="status-dot" id="status-dot"></div>
+    <span id="status-text">Not in edit mode</span>
+    <span id="unsaved-dot" class="unsaved-dot">●</span>
+  </div>
+</div>
+
+<!-- EDITOR PANEL -->
+<div id="admin-editor-panel">
+  <div class="panel-header">
+    <div class="panel-header-info">
+      <div class="panel-header-title" id="panel-title">Element Editor</div>
+      <div class="panel-breadcrumb" id="panel-breadcrumb">Select an element...</div>
+    </div>
+    <button class="panel-close-btn" onclick="Admin.closePanel()">✕</button>
+  </div>
+
+  <div class="panel-tabs">
+    <button class="panel-tab active" id="tab-html-btn" onclick="Admin.switchTab('html')">📄 HTML</button>
+    <button class="panel-tab" id="tab-css-btn" onclick="Admin.switchTab('css')">🎨 Global CSS</button>
+  </div>
+
+  <div class="panel-toolbar">
+    <button class="ptb-btn" onclick="Admin.formatCode()">⎇ Format</button>
+    <button class="ptb-btn" onclick="Admin.wrapSelection('strong')">B</button>
+    <button class="ptb-btn" onclick="Admin.wrapSelection('em')"><em>I</em></button>
+    <button class="ptb-btn" onclick="Admin.insertSnippet('link')">🔗 Link</button>
+    <button class="ptb-btn" onclick="Admin.insertSnippet('img')">🖼 Image</button>
+    <button class="ptb-btn" onclick="Admin.insertSnippet('btn')">🔘 Button</button>
+    <button class="ptb-btn" style="margin-left:auto" onclick="Admin.copyCode()">📋 Copy</button>
+  </div>
+
+  <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+    <div class="tab-content active" id="tab-html" style="height:100%">
+      <div class="editor-wrap">
+        <textarea id="html-editor" spellcheck="false" placeholder="HTML code will appear here..."></textarea>
+      </div>
+    </div>
+    <div class="tab-content" id="tab-css" style="height:100%">
+      <div class="editor-wrap">
+        <textarea id="css-editor" spellcheck="false" placeholder="CSS will appear here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-footer">
+    <button class="pf-btn apply html-only" id="apply-html-btn" onclick="Admin.applyHTML()">✓ Apply HTML</button>
+    <button class="pf-btn apply-css css-only" id="apply-css-btn" onclick="Admin.applyCSS()">✓ Apply CSS</button>
+    <button class="pf-btn delete html-only" onclick="Admin.deleteElement()">🗑 Delete</button>
+    <button class="pf-btn cancel" onclick="Admin.closePanel()">Cancel</button>
+  </div>
+</div>
+
+<!-- ============ PAGE CONTENT ============ -->
+<div id="page-content">
+
+<!-- TOP BAR -->
+<div class="topbar" id="section-topbar">
+  <div class="topbar-left">
+    <span class="topbar-item">📞 +91 94153 62049</span>
+    <span class="topbar-item">✉️ <a href="mailto:contactus@pvmsvmvam.org">contactus@pvmsvmvam.org</a></span>
+  </div>
+  <div class="topbar-right">
+    <span>Affiliated to Allahabad State University</span>
+    <span>|</span>
+    <span>Pratapgarh, Uttar Pradesh, India</span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header id="section-header">
+  <a href="#" class="logo-area">
+    <div class="logo-emblem">
+      <svg viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="20" stroke="#c9a84c" stroke-width="1.5" fill="none" opacity=".4"/>
+        <path d="M24 10 L28 18 L37 18 L30 23 L33 32 L24 27 L15 32 L18 23 L11 18 L20 18 Z" fill="#c9a84c" opacity=".8"/>
+        <circle cx="24" cy="24" r="5" fill="#e8701466"/>
+        <path d="M16 38 Q24 34 32 38" stroke="#c9a84c" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <h1>Pt. Vidyadhar Mishra S.V.M.<br>Vigyan Evam Anusandhan Mahavidyalaya</h1>
+      <p>Pratapgarh, Uttar Pradesh — Est. 2010</p>
+    </div>
+  </a>
+  <nav>
+    <a href="#" class="active">Home</a>
+    <div class="nav-dropdown"><a href="#about">About</a>
+      <div class="dropdown-menu">
+        <a href="#about">About College</a><a href="#vision">Vision &amp; Mission</a>
+        <a href="#about">About Trust</a><a href="#about">Founder / Chairman</a><a href="#about">Principal's Message</a>
+      </div>
+    </div>
+    <div class="nav-dropdown"><a href="#courses">Academics</a>
+      <div class="dropdown-menu">
+        <a href="#courses">B.A.</a><a href="#courses">B.Sc.</a><a href="#courses">B.Ed.</a><a href="#courses">D.El.Ed</a>
+      </div>
+    </div>
+    <div class="nav-dropdown"><a href="#facilities">Facilities</a>
+      <div class="dropdown-menu">
+        <a href="#facilities">Library</a><a href="#facilities">Computer Lab</a><a href="#facilities">Sports</a>
+        <a href="#facilities">Transport</a><a href="#facilities">WiFi</a><a href="#facilities">Canteen</a>
+      </div>
+    </div>
+    <a href="#news">News</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMobileNav()"><span></span><span></span><span></span></button>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="close-btn" onclick="toggleMobileNav()">✕</button>
+  <h2>Navigation</h2>
+  <a href="#" onclick="toggleMobileNav()">🏠 Home</a>
+  <a href="#about" onclick="toggleMobileNav()">🏛️ About College</a>
+  <a href="#vision" onclick="toggleMobileNav()">🎯 Vision &amp; Mission</a>
+  <a href="#courses" onclick="toggleMobileNav()">📚 Courses</a>
+  <a href="#facilities" onclick="toggleMobileNav()">🏗️ Facilities</a>
+  <a href="#news" onclick="toggleMobileNav()">📰 News &amp; Circular</a>
+  <a href="#contact" onclick="toggleMobileNav()">📞 Contact Us</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="section-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <svg class="hero-pattern" viewBox="0 0 200 200" fill="none">
+    <circle cx="100" cy="100" r="90" stroke="white" stroke-width="2"/>
+    <circle cx="100" cy="100" r="70" stroke="white" stroke-width="1.5"/>
+    <circle cx="100" cy="100" r="50" stroke="white" stroke-width="1"/>
+    <path d="M100 10L100 190M10 100L190 100M29 29L171 171M29 171L171 29" stroke="white" stroke-width=".8"/>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-badge">Affiliated to Allahabad State University</div>
+      <h1 class="hero-title">Shaping Minds,<br><em>Illuminating Futures</em></h1>
+      <p class="hero-subtitle">Pt. Vidyadhar Mishra Saraswati Vidya Mandir Vigyan Evam Anusandhan Mahavidyalaya</p>
+      <p class="hero-desc">A premier institution in Pratapgarh, Uttar Pradesh, dedicated to excellence in education, research, and holistic student development since 2010.</p>
+      <div class="hero-actions">
+        <a href="#courses" class="btn-primary">Explore Courses</a>
+        <a href="#about" class="btn-outline">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-stats">
+        <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Years of Excellence</div></div>
+        <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Degree Programmes</div></div>
+        <div class="stat-card"><div class="stat-number">5</div><div class="stat-label">Acres Campus</div></div>
+        <div class="stat-card"><div class="stat-number">2010</div><div class="stat-label">Year Founded</div></div>
+        <div class="stat-card featured"><div class="stat-number">🎓</div><div class="stat-label" style="color:rgba(255,255,255,.8);font-size:14px;margin-top:6px;">One of the Best Colleges under Allahabad State University</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-bar" id="section-marquee">
+  <div class="marquee-inner">
+    <span>Admissions Open 2025–26</span><span>B.A. — Bachelor of Arts</span><span>B.Sc. — Bachelor of Science</span>
+    <span>B.Ed. — Bachelor of Education</span><span>D.El.Ed — Diploma in Elementary Education</span>
+    <span>Affiliated to Allahabad State University</span>
+    <span>Admissions Open 2025–26</span><span>B.A. — Bachelor of Arts</span><span>B.Sc. — Bachelor of Science</span>
+    <span>B.Ed. — Bachelor of Education</span><span>D.El.Ed — Diploma in Elementary Education</span>
+    <span>Affiliated to Allahabad State University</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="section-about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual reveal">
+        <div class="about-img-main">
+          <svg viewBox="0 0 160 160" fill="none"><rect x="20" y="60" width="120" height="80" rx="4" fill="white" opacity=".05" stroke="white" stroke-width="1"/><path d="M20 80 L80 40 L140 80" stroke="white" stroke-width="2" fill="none"/><rect x="60" y="90" width="40" height="50" rx="2" fill="white" opacity=".1"/><rect x="30" y="85" width="30" height="30" rx="2" fill="white" opacity=".07"/><rect x="100" y="85" width="30" height="30" rx="2" fill="white" opacity=".07"/></svg>
+          <div class="about-img-main-text">
+            <h3>A Legacy of Knowledge &amp; Character</h3>
+            <p>Fostering academic excellence in a 5-acre campus in the heart of Pratapgarh, U.P.</p>
+          </div>
+        </div>
+        <div class="about-badge-float"><strong>2010</strong><span>Year Founded</span></div>
+      </div>
+      <div class="about-content reveal">
+        <div class="section-tag">Our Story</div>
+        <h2 class="section-title">A Self-Financing Institution of Distinction</h2>
+        <p style="color:var(--text-light);line-height:1.85;font-size:15.5px;margin-bottom:20px;">Established on January 3, 2010, our Mahavidyalaya stands within a sprawling 5-acre campus in Rampur Bawli Lalganj, Pratapgarh, Uttar Pradesh. Managed by a dedicated seven-member Management Committee.</p>
+        <ul class="about-list">
+          <li>Modern classrooms, fully equipped laboratories &amp; workshops</li>
+          <li>State-of-the-art computer centre with high-speed internet</li>
+          <li>Well-stocked library with thousands of volumes &amp; journals</li>
+          <li>Team of committed, experienced faculty members</li>
+          <li>Recognised under the National Council for Teacher Education (NCTE)</li>
+          <li>Scholarship support via U.P. Scholarship &amp; Fee Reimbursement portal</li>
+        </ul>
+        <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;">
+          <a href="#courses" class="btn-primary">View Programmes</a>
+          <a href="#contact" class="btn-outline" style="color:var(--navy);border-color:var(--navy);">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section class="courses" id="section-courses">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="section-tag">Academics</div>
+      <h2 class="section-title">Programmes We Offer</h2>
+      <p class="section-desc">Choose from our comprehensive range of undergraduate and diploma programmes.</p>
+    </div>
+    <div class="courses-grid">
+      <div class="course-card reveal"><div class="course-icon">🎨</div><div class="course-short">B.A.</div><h3>Bachelor of Arts</h3><p>A well-rounded humanities programme covering Literature, History, Political Science, Sociology, Geography and more.</p><span class="course-tag">3 Years · Full Time</span></div>
+      <div class="course-card reveal"><div class="course-icon">🔬</div><div class="course-short">B.Sc.</div><h3>Bachelor of Science</h3><p>Rigorous science education with fully equipped labs in Physics, Chemistry, Mathematics and Biology streams.</p><span class="course-tag">3 Years · Full Time</span></div>
+      <div class="course-card reveal"><div class="course-icon">📖</div><div class="course-short">B.Ed.</div><h3>Bachelor of Education</h3><p>Professional teacher training programme approved by NCTE for secondary and higher secondary level teaching.</p><span class="course-tag">2 Years · Full Time</span></div>
+      <div class="course-card reveal"><div class="course-icon">✏️</div><div class="course-short">D.El.Ed.</div><h3>Diploma in Elementary Education</h3><p>A foundational teaching diploma recognised by SCERT U.P. for primary and upper primary level educators.</p><span class="course-tag">2 Years · Full Time</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FACILITIES -->
+<section class="facilities" id="section-facilities">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">Infrastructure</div>
+      <h2 class="section-title">World-Class Facilities</h2>
+      <p class="section-desc">Our campus is equipped with everything a modern learner needs.</p>
+    </div>
+    <div class="facilities-grid">
+      <div class="facility-card reveal"><div class="facility-icon">📚</div><div><h4>Library</h4><p>A rich repository of books, journals, and reference materials supporting all disciplines.</p></div></div>
+      <div class="facility-card reveal"><div class="facility-icon">💻</div><div><h4>Computer Laboratory</h4><p>Modern computer centre with the latest hardware and software for digital literacy.</p></div></div>
+      <div class="facility-card reveal"><div class="facility-icon">🌐</div><div><h4>Internet &amp; WiFi</h4><p>High-speed broadband and campus-wide WiFi ensuring seamless connectivity.</p></div></div>
+      <div class="facility-card reveal"><div class="facility-icon">🏅</div><div><h4>Sports Facilities</h4><p>Dedicated grounds for cricket, football, kabaddi, athletics and indoor sports.</p></div></div>
+      <div class="facility-card reveal"><div class="facility-icon">🚌</div><div><h4>Transport</h4><p>Regular transport services connecting surrounding villages to the college campus.</p></div></div>
+      <div class="facility-card reveal"><div class="facility-icon">🍽️</div><div><h4>Canteen</h4><p>In-campus canteen providing hygienic, nutritious, and affordable meals.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION MISSION -->
+<section class="vision-mission" id="section-vision">
+  <div class="container">
+    <div class="section-header center reveal" style="margin-bottom:50px;">
+      <div class="section-tag" style="color:var(--saffron-light);justify-content:center;">Our Purpose</div>
+      <h2 class="section-title" style="color:white;">Vision &amp; Mission</h2>
+    </div>
+    <div class="vm-grid">
+      <div class="vm-card reveal">
+        <h3><span class="vm-icon">🔭</span> Our <span>Vision</span></h3>
+        <p>To be a premier centre of learning and research in Uttar Pradesh, nurturing intellectually vibrant, morally grounded, and socially responsible citizens who contribute meaningfully to a progressive India.</p>
+      </div>
+      <div class="vm-card reveal">
+        <h3><span class="vm-icon">🎯</span> Our <span>Mission</span></h3>
+        <ul>
+          <li>Provide quality, affordable higher education to all backgrounds</li>
+          <li>Develop critical thinking, creativity, and innovation</li>
+          <li>Promote research culture and evidence-based practice</li>
+          <li>Foster values of integrity, discipline, and social consciousness</li>
+          <li>Strengthen industry-academia collaboration for placement</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="news" id="section-news">
+  <div class="container">
+    <div class="news-grid">
+      <div>
+        <div class="section-header reveal"><div class="section-tag">Latest Updates</div><h2 class="section-title">News &amp; Circulars</h2></div>
+        <div class="news-card reveal"><div class="news-date">March 2025</div><h4>Admissions Open for Academic Session 2025–26</h4><p>Applications are now being accepted for B.A., B.Sc., B.Ed., and D.El.Ed programmes. Eligible candidates are encouraged to apply at the earliest.</p></div>
+        <div class="news-card reveal"><div class="news-date">January 2025</div><h4>Annual Prize Distribution &amp; Cultural Programme</h4><p>The college organised its annual prize distribution ceremony celebrating academic achievers, sports champions, and cultural performers.</p></div>
+        <div class="news-card reveal"><div class="news-date">November 2024</div><h4>Workshop on Digital Literacy &amp; Smart Classrooms</h4><p>A one-day workshop was conducted for faculty and students on effective use of digital tools in modern education.</p></div>
+        <div class="news-card reveal"><div class="news-date">August 2024</div><h4>Independence Day Celebration &amp; Tree Plantation Drive</h4><p>The college celebrated Independence Day with flag hoisting, cultural events, and a campus-wide tree plantation initiative.</p></div>
+      </div>
+      <div>
+        <div class="sidebar-widget reveal">
+          <h3>Quick Links</h3>
+          <a class="quick-link" href="#courses">B.A. Programme Details</a>
+          <a class="quick-link" href="#courses">B.Sc. Programme Details</a>
+          <a class="quick-link" href="#courses">B.Ed. Programme Details</a>
+          <a class="quick-link" href="#courses">D.El.Ed Programme Details</a>
+          <a class="quick-link" href="#">Download Prospectus</a>
+          <a class="quick-link" href="#">Admission Form</a>
+          <a class="quick-link" href="#">Syllabus &amp; Curriculum</a>
+          <a class="quick-link" href="#">Academic Calendar</a>
+          <a class="quick-link" href="#">Fee Structure</a>
+          <a class="quick-link" href="#contact">Contact Administration</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPORTANT LINKS -->
+<section class="links-section" id="section-links">
+  <div class="container">
+    <div class="section-header center reveal"><div class="section-tag">External Resources</div><h2 class="section-title">Important Links</h2></div>
+    <div class="links-grid">
+      <a href="http://www.alldstateuniversity.org/" class="link-card" target="_blank">Allahabad State University</a>
+      <a href="http://www.examregulatoryauthorityup.in/" class="link-card" target="_blank">Exam Regulatory Authority, U.P.</a>
+      <a href="http://bor.up.nic.in/" class="link-card" target="_blank">Board of Revenue, U.P.</a>
+      <a href="http://ncte-india.org/" class="link-card" target="_blank">National Council For Teacher Education</a>
+      <a href="http://www.scertup.co.in/" class="link-card" target="_blank">SCERT, Uttar Pradesh</a>
+      <a href="http://scholarship.up.nic.in/" class="link-card" target="_blank">U.P. Scholarship Portal</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="section-contact">
+  <div class="container">
+    <div class="section-header reveal"><div class="section-tag">Reach Us</div><h2 class="section-title">Contact Us</h2><p class="section-desc" style="color:rgba(255,255,255,.55);">We're here to answer any questions about admissions, academics, or campus life.</p></div>
+    <div class="contact-grid">
+      <div>
+        <ul class="contact-info-list">
+          <li class="contact-info-item"><div class="contact-icon">📍</div><div><h5>Address</h5><p>Rampur Bawli Khas, Lalganj Pratapgarh<br>Pin Code – 230132, Uttar Pradesh, India</p></div></li>
+          <li class="contact-info-item"><div class="contact-icon">📞</div><div><h5>Phone</h5><p>+91 94153 62049 | +91 81828 78281 | +91 94159 80511</p></div></li>
+          <li class="contact-info-item"><div class="contact-icon">✉️</div><div><h5>Email</h5><p>contactus@pvmsvmvam.org</p></div></li>
+          <li class="contact-info-item"><div class="contact-icon">🕐</div><div><h5>Office Hours</h5><p>Monday – Saturday: 9:00 AM – 5:00 PM</p></div></li>
+          <li class="contact-info-item"><div class="contact-icon">🏛️</div><div><h5>Affiliation</h5><p>Allahabad State University · Approved by NCTE &amp; SCERT, U.P.</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <div class="contact-form">
+          <h3>Send Us a Message</h3>
+          <div class="form-row">
+            <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your full name"></div>
+            <div class="form-group"><label>Mobile Number</label><input type="tel" placeholder="+91 XXXXX XXXXX"></div>
+          </div>
+          <div class="form-group"><label>Email Address</label><input type="email" placeholder="your@email.com"></div>
+          <div class="form-group"><label>Enquiry About</label>
+            <select><option>Select a programme...</option><option>B.A.</option><option>B.Sc.</option><option>B.Ed.</option><option>D.El.Ed.</option><option>General Enquiry</option></select>
+          </div>
+          <div class="form-group"><label>Message</label><textarea placeholder="Write your enquiry here..."></textarea></div>
+          <button class="btn-submit" onclick="handleSubmit(this)">Send Message →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="section-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><div class="footer-logo-circle">🎓</div><span class="footer-brand-text">PVM SVM VAM</span></div>
+        <p>Pt. Vidyadhar Mishra Saraswati Vidya Mandir Vigyan Evam Anusandhan Mahavidyalaya — cultivating knowledge, values, and excellence since 2010.</p>
+        <p style="font-size:13px;">Rampur Bawli Khas, Lalganj Pratapgarh — 230132, U.P., India</p>
+      </div>
+      <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="#">Home</a></li><li><a href="#about">About College</a></li><li><a href="#vision">Vision &amp; Mission</a></li><li><a href="#courses">Our Courses</a></li><li><a href="#facilities">Facilities</a></li><li><a href="#news">News</a></li><li><a href="#contact">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Programmes</h4><ul><li><a href="#courses">B.A.</a></li><li><a href="#courses">B.Sc.</a></li><li><a href="#courses">B.Ed.</a></li><li><a href="#courses">D.El.Ed.</a></li><li><a href="#">Syllabus</a></li><li><a href="#">Academic Calendar</a></li></ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:+919415362049">+91 94153 62049</a></li><li><a href="tel:+918182878281">+91 81828 78281</a></li><li><a href="mailto:contactus@pvmsvmvam.org">contactus@pvmsvmvam.org</a></li><li><a href="http://www.alldstateuniversity.org/" target="_blank">Allahabad State University</a></li><li><a href="http://scholarship.up.nic.in/" target="_blank">U.P. Scholarship Portal</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Pt. Vidyadhar Mishra S.V.M. Vigyan Evam Anusandhan Mahavidyalaya. All rights reserved.</span>
+      <span>Affiliated to <a href="http://www.alldstateuniversity.org/" target="_blank">Allahabad State University</a></span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- end #page-content -->
+
+<script>
+/* ============================================================
+   WEBSITE JS
+============================================================ */
+function toggleMobileNav(){document.getElementById('mobileNav').classList.toggle('open')}
+function handleSubmit(btn){const o=btn.textContent;btn.textContent='Sending...';btn.disabled=true;setTimeout(()=>{btn.textContent='✓ Message Sent!';btn.style.background='#22c55e';setTimeout(()=>{btn.textContent=o;btn.disabled=false;btn.style.background=''},3000)},1800)}
+
+const reveals=document.querySelectorAll('.reveal');
+const revealObs=new IntersectionObserver((entries)=>{entries.forEach((entry,i)=>{if(entry.isIntersecting){setTimeout(()=>entry.target.classList.add('visible'),i*80);revealObs.unobserve(entry.target)}})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+reveals.forEach(el=>revealObs.observe(el));
+
+/* ============================================================
+   ADMIN PANEL JS
+============================================================ */
+const Admin = {
+  PASSWORD: 'admin123',
+  isLoggedIn: false,
+  isEditMode: false,
+  selectedEl: null,
+  hoveredEl: null,
+  currentTab: 'html',
+  hasUnsaved: false,
+
+  /* ── INIT ── */
+  init() {
+    this.loadSavedState();
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        e.preventDefault();
+        this.isLoggedIn ? null : this.showLogin();
+      }
+      if (e.key === 'Escape') {
+        if (this.isEditMode) this.toggleEditMode();
+        this.closePanel();
+      }
+    });
+    // Tab support in editors
+    ['html-editor','css-editor'].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', e => {
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          const ta = e.target;
+          const s = ta.selectionStart, end = ta.selectionEnd;
+          ta.value = ta.value.substring(0,s)+'  '+ta.value.substring(end);
+          ta.selectionStart = ta.selectionEnd = s+2;
+        }
+      });
+    });
+  },
+
+  /* ── SAVED STATE ── */
+  loadSavedState() {
+    const savedHTML = localStorage.getItem('pvmsvmvam_html');
+    const savedCSS = localStorage.getItem('pvmsvmvam_css');
+    if (savedHTML) {
+      document.getElementById('page-content').innerHTML = savedHTML;
+      this.reInitReveal();
+    }
+    if (savedCSS) {
+      document.getElementById('page-main-style').textContent = savedCSS;
+    }
+  },
+
+  reInitReveal() {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObs.observe(el));
+  },
+
+  saveAll() {
+    const html = document.getElementById('page-content').innerHTML;
+    const css = document.getElementById('page-main-style').textContent;
+    localStorage.setItem('pvmsvmvam_html', html);
+    localStorage.setItem('pvmsvmvam_css', css);
+    this.hasUnsaved = false;
+    document.getElementById('unsaved-dot').classList.remove('show');
+    this.showToast('✓ All changes saved successfully!');
+  },
+
+  resetAll() {
+    if (confirm('🔄 Reset karein? Saare changes delete ho jayenge aur page reload hoga.')) {
+      localStorage.removeItem('pvmsvmvam_html');
+      localStorage.removeItem('pvmsvmvam_css');
+      location.reload();
+    }
+  },
+
+  markUnsaved() {
+    this.hasUnsaved = true;
+    document.getElementById('unsaved-dot').classList.add('show');
+  },
+
+  /* ── LOGIN ── */
+  showLogin() {
+    document.getElementById('admin-login-modal').classList.add('show');
+    setTimeout(() => document.getElementById('admin-password').focus(), 100);
+  },
+
+  hideLogin() {
+    document.getElementById('admin-login-modal').classList.remove('show');
+    document.getElementById('login-error').style.display = 'none';
+    document.getElementById('admin-password').value = '';
+  },
+
+  login() {
+    const pw = document.getElementById('admin-password').value;
+    if (pw === this.PASSWORD) {
+      this.isLoggedIn = true;
+      this.hideLogin();
+      document.getElementById('admin-toolbar').classList.add('show');
+      document.body.classList.add('admin-active');
+      document.getElementById('admin-gear-btn').style.display = 'none';
+      this.showToast('👋 Welcome! Admin panel ready.');
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('admin-password').value = '';
+      document.getElementById('admin-password').focus();
+      document.getElementById('admin-login-modal').querySelector('.admin-login-box').style.animation = 'shake .4s ease';
+      setTimeout(() => document.getElementById('admin-login-modal').querySelector('.admin-login-box').style.animation = '', 500);
+    }
+  },
+
+  logout() {
+    if (this.hasUnsaved && !confirm('Unsaved changes hain. Logout karna chahte hain?')) return;
+    if (this.isEditMode) this.toggleEditMode();
+    this.closePanel();
+    this.isLoggedIn = false;
+    document.getElementById('admin-toolbar').classList.remove('show');
+    document.body.classList.remove('admin-active');
+    document.getElementById('admin-gear-btn').style.display = 'flex';
+    this.showToast('Logged out successfully.');
+  },
+
+  /* ── EDIT MODE ── */
+  toggleEditMode() {
+    this.isEditMode = !this.isEditMode;
+    const btn = document.getElementById('tb-edit-btn');
+    const label = document.getElementById('edit-mode-label');
+    const dot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const badge = document.getElementById('edit-badge');
+
+    if (this.isEditMode) {
+      btn.classList.add('active');
+      label.textContent = 'ON';
+      dot.classList.add('active');
+      statusText.textContent = 'Click any element to edit';
+      badge.classList.add('show');
+      document.body.classList.add('admin-edit-mode');
+      this.attachEditListeners();
+    } else {
+      btn.classList.remove('active');
+      label.textContent = 'OFF';
+      dot.classList.remove('active');
+      statusText.textContent = 'Not in edit mode';
+      badge.classList.remove('show');
+      document.body.classList.remove('admin-edit-mode');
+      this.removeEditListeners();
+      this.clearHighlight();
+    }
+  },
+
+  /* ── EVENT LISTENERS ── */
+  _mouseMoveHandler: null,
+  _clickHandler: null,
+
+  attachEditListeners() {
+    const pc = document.getElementById('page-content');
+    this._mouseMoveHandler = (e) => this.handleHover(e);
+    this._clickHandler = (e) => this.handleClick(e);
+    pc.addEventListener('mouseover', this._mouseMoveHandler);
+    pc.addEventListener('click', this._clickHandler);
+  },
+
+  removeEditListeners() {
+    const pc = document.getElementById('page-content');
+    if (this._mouseMoveHandler) pc.removeEventListener('mouseover', this._mouseMoveHandler);
+    if (this._clickHandler) pc.removeEventListener('click', this._clickHandler);
+  },
+
+  handleHover(e) {
+    if (!this.isEditMode) return;
+    const target = e.target;
+    if (target === document.getElementById('page-content')) return;
+    this.clearHighlight();
+    target.classList.add('admin-hl');
+    this.hoveredEl = target;
+
+    // Show tooltip
+    const tooltip = document.getElementById('admin-tooltip');
+    const tag = target.tagName.toLowerCase();
+    const id = target.id ? '#'+target.id : '';
+    const cls = target.className ? '.'+[...target.classList].filter(c=>c!=='admin-hl').slice(0,2).join('.') : '';
+    tooltip.textContent = `<${tag}${id}${cls}>`;
+    tooltip.style.display = 'block';
+    tooltip.style.left = (e.clientX + 14) + 'px';
+    tooltip.style.top = (e.clientY - 32) + 'px';
+  },
+
+  clearHighlight() {
+    if (this.hoveredEl) {
+      this.hoveredEl.classList.remove('admin-hl');
+      this.hoveredEl = null;
+    }
+    document.getElementById('admin-tooltip').style.display = 'none';
+  },
+
+  handleClick(e) {
+    if (!this.isEditMode) return;
+    e.preventDefault();
+    e.stopPropagation();
+    this.openPanel(e.target);
+  },
+
+  /* ── EDITOR PANEL ── */
+  openPanel(el) {
+    this.selectedEl = el;
+    const html = this.formatHTML(el.outerHTML);
+    const css = document.getElementById('page-main-style').textContent;
+
+    document.getElementById('html-editor').value = html;
+    document.getElementById('css-editor').value = css;
+    document.getElementById('panel-breadcrumb').textContent = this.getBreadcrumb(el);
+    document.getElementById('panel-title').textContent = this.getElementLabel(el);
+
+    document.getElementById('admin-editor-panel').classList.add('open');
+    document.getElementById('admin-overlay').classList.add('show');
+    this.switchTab('html');
+  },
+
+  openCSSEditor() {
+    this.selectedEl = null;
+    document.getElementById('css-editor').value = document.getElementById('page-main-style').textContent;
+    document.getElementById('panel-breadcrumb').textContent = 'Global stylesheet — <style> tag';
+    document.getElementById('panel-title').textContent = '🎨 Global CSS Editor';
+    document.getElementById('admin-editor-panel').classList.add('open');
+    document.getElementById('admin-overlay').classList.add('show');
+    this.switchTab('css');
+  },
+
+  closePanel() {
+    document.getElementById('admin-editor-panel').classList.remove('open');
+    document.getElementById('admin-overlay').classList.remove('show');
+    this.selectedEl = null;
+  },
+
+  switchTab(tab) {
+    this.currentTab = tab;
+    document.getElementById('tab-html').classList.toggle('active', tab === 'html');
+    document.getElementById('tab-css').classList.toggle('active', tab === 'css');
+    document.getElementById('tab-html-btn').classList.toggle('active', tab === 'html');
+    document.getElementById('tab-css-btn').classList.toggle('active', tab === 'css');
+
+    // Show/hide footer buttons
+    document.querySelectorAll('.html-only').forEach(b => b.style.display = tab==='html' ? 'flex' : 'none');
+    document.querySelectorAll('.css-only').forEach(b => b.style.display = tab==='css' ? 'flex' : 'none');
+  },
+
+  /* ── APPLY ── */
+  applyHTML() {
+    if (!this.selectedEl) return;
+    const newHTML = document.getElementById('html-editor').value.trim();
+    if (!newHTML) { alert('HTML empty hai!'); return; }
+    try {
+      const temp = document.createElement('div');
+      temp.innerHTML = newHTML;
+      const newEl = temp.firstElementChild || temp;
+      this.selectedEl.replaceWith(newEl);
+      this.selectedEl = newEl;
+      this.markUnsaved();
+      this.showToast('✓ HTML applied! Save karna na bhoolein.');
+      this.reInitReveal();
+    } catch(err) {
+      alert('HTML error: ' + err.message);
+    }
+  },
+
+  applyCSS() {
+    const newCSS = document.getElementById('css-editor').value;
+    document.getElementById('page-main-style').textContent = newCSS;
+    this.markUnsaved();
+    this.showToast('✓ CSS applied successfully!');
+  },
+
+  deleteElement() {
+    if (!this.selectedEl) return;
+    if (confirm('⚠️ Is element ko delete karna chahte hain?\n\n' + this.getElementLabel(this.selectedEl))) {
+      this.selectedEl.remove();
+      this.selectedEl = null;
+      this.closePanel();
+      this.markUnsaved();
+      this.showToast('🗑 Element deleted.');
+    }
+  },
+
+  /* ── UTILITIES ── */
+  getBreadcrumb(el) {
+    const parts = [];
+    let cur = el;
+    while (cur && cur.id !== 'page-content' && cur !== document.body && parts.length < 5) {
+      let s = cur.tagName.toLowerCase();
+      if (cur.id) s += '#'+cur.id;
+      else if (cur.className && typeof cur.className === 'string') {
+        const c = [...cur.classList].filter(x => x !== 'admin-hl').slice(0,2);
+        if (c.length) s += '.'+c.join('.');
+      }
+      parts.unshift(s);
+      cur = cur.parentElement;
+    }
+    return parts.join(' › ');
+  },
+
+  getElementLabel(el) {
+    const tag = el.tagName.toLowerCase();
+    const id = el.id ? '#'+el.id : '';
+    const h = el.querySelector('h1,h2,h3,h4,h5');
+    const label = h ? ` — "${h.textContent.trim().slice(0,40)}"` : '';
+    return `<${tag}${id}>${label}`;
+  },
+
+  formatHTML(html) {
+    try {
+      let indent = 0;
+      let out = '';
+      const tokens = html.match(/<[^>]+>|[^<]+/g) || [];
+      tokens.forEach(tok => {
+        tok = tok.trim();
+        if (!tok) return;
+        if (tok.match(/^<\//) && !tok.match(/^<\//)) {
+          // closing tag, handled below
+        }
+        if (tok.match(/^<\/[a-z]/i)) {
+          indent = Math.max(0, indent - 1);
+          out += '  '.repeat(indent) + tok + '\n';
+        } else if (tok.match(/^<[a-z]/i) && !tok.match(/\/>$/) && !tok.match(/^<(br|hr|img|input|meta|link|area|base|col|embed|param|source|track|wbr)/i)) {
+          out += '  '.repeat(indent) + tok + '\n';
+          indent++;
+        } else {
+          out += '  '.repeat(indent) + tok + '\n';
+        }
+      });
+      return out.trim();
+    } catch(e) {
+      return html;
+    }
+  },
+
+  formatCode() {
+    if (this.currentTab === 'html') {
+      const ta = document.getElementById('html-editor');
+      ta.value = this.formatHTML(ta.value);
+    }
+    // CSS formatting is complex, skip for now
+  },
+
+  wrapSelection(tag) {
+    const ta = document.getElementById('html-editor');
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    const sel = ta.value.substring(s, e);
+    const wrapped = `<${tag}>${sel}</${tag}>`;
+    ta.value = ta.value.substring(0,s) + wrapped + ta.value.substring(e);
+    ta.selectionStart = s; ta.selectionEnd = s + wrapped.length;
+    ta.focus();
+  },
+
+  insertSnippet(type) {
+    const ta = document.getElementById('html-editor');
+    const s = ta.selectionStart;
+    const snippets = {
+      link: '<a href="#" class="">Link Text</a>',
+      img: '<img src="image.jpg" alt="Description" style="width:100%;border-radius:8px;">',
+      btn: '<a href="#" class="btn-primary">Button Text</a>'
+    };
+    const snip = snippets[type] || '';
+    ta.value = ta.value.substring(0,s) + snip + ta.value.substring(s);
+    ta.selectionStart = ta.selectionEnd = s + snip.length;
+    ta.focus();
+  },
+
+  copyCode() {
+    const ta = this.currentTab === 'html' ? 'html-editor' : 'css-editor';
+    navigator.clipboard.writeText(document.getElementById(ta).value)
+      .then(() => this.showToast('📋 Code copied to clipboard!'));
+  },
+
+  showToast(msg) {
+    const t = document.getElementById('save-toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+};
+
+// Add shake animation
+document.head.insertAdjacentHTML('beforeend','<style>@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}</style>');
+
+// Add id to first style tag so CSS editing works
+document.querySelector('style').id = 'page-main-style';
+
+// INIT
+Admin.init();
+
+// Keyboard shortcut hint
+console.log('%c PVM SVM VAM Admin Panel ', 'background:#0f2044;color:#c9a84c;font-size:14px;font-weight:bold;padding:6px 12px;border-radius:4px;');
+console.log('%c Press Ctrl+Shift+A or click the ⚙ button to open Admin Panel ', 'color:#58a6ff;font-size:12px;');
+console.log('%c Default Password: admin123 ', 'color:#3fb950;font-size:12px;');
+</script>
+</body>
+</html>
